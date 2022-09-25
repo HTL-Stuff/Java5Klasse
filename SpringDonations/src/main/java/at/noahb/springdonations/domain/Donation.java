@@ -32,4 +32,10 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "person")
     private Person person;
+
+    public Donation(int amount, LocalDate depositDate, Person person) {
+        this.amount = amount;
+        this.depositDate = depositDate;
+        this.person = person;
+    }
 }

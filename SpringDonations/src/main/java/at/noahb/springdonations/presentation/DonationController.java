@@ -1,11 +1,12 @@
 package at.noahb.springdonations.presentation;
 
 import at.noahb.springdonations.domain.Donation;
+import at.noahb.springdonations.exception.NotFoundException;
+import at.noahb.springdonations.payload.response.GetAllWithMinDonationResponse;
 import at.noahb.springdonations.persistence.DonationRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/donations")
@@ -14,7 +15,7 @@ public record DonationController(DonationRepository donationRepository) {
 
     @GetMapping("/{id}")
     public Donation getById(@PathVariable Integer id) {
-        return donationRepository.findById(id).orElseThrow();
+        return donationRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find donation with id " + id));
     }
 
     @GetMapping
@@ -23,8 +24,8 @@ public record DonationController(DonationRepository donationRepository) {
             return donationRepository.findAll();
         }
 
-        return Collections.emptyList();
+        return donationRepository.findDistinctByAmount(minimum).stream()
+                .map(person -> new GetAllWithMinDonationResponse(person, donationRepository.sumOfDonationsByPerson(person)))
+                .toList();
     }
-
-
 }
