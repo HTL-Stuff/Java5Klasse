@@ -38,4 +38,5 @@ public class Donation {
         this.depositDate = depositDate;
         this.person = person;
     }
+
 }
