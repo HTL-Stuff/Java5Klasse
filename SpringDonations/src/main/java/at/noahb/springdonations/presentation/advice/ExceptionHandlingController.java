@@ -24,14 +24,14 @@ public class ExceptionHandlingController {
     @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(NOT_FOUND)
     public ResponseEntity<ExceptionResponse> handlePersonNotFoundException(NotFoundException exception) {
-        LOGGER.error(exception.getMessage());
+
         return ResponseEntity.status(NOT_FOUND).body(new ExceptionResponse(NOT_FOUND.value(), NOT_FOUND, exception.getMessage()));
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
     @ResponseStatus(BAD_REQUEST)
     public ResponseEntity<ExceptionResponse> handleConstraintViolationException(ConstraintViolationException exception) {
-        LOGGER.error(exception.getMessage());
+
         return ResponseEntity.status(BAD_REQUEST).body(new ExceptionResponse(BAD_REQUEST.value(), BAD_REQUEST, exception.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList().toString()));
     }
 

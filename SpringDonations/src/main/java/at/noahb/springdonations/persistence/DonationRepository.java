@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface DonationRepository extends JpaRepository<Donation, Integer> {
     @Query(value = """
-            select distinct donation.person from Donation donation
+            select donation.person from Donation donation
             group by donation.person
             having sum(donation.amount) >= ?1
             """)
