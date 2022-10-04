@@ -31,7 +31,7 @@ public class Task {
 
     @Setter
     @Past
-    @Column(name = "finshed_date")
+    @Column(name = "finished_date")
     LocalDate finishingTime;
 
     @Positive

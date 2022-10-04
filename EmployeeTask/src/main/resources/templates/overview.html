@@ -7,14 +7,15 @@
 <body>
     <form method="get" action="detailed" th:object="${newEmployee}">
         <div>
-            <label th:for="${newEmployee}"></label>
-            <select th:field="${newEmployee}" name="id">
+            <label th:for="${newEmployee.id}">Select employee:</label>
+            <select th:field="${newEmployee.id}">
                 <option th:each="employee : ${employees}"
                         th:text="${employee.getFirstName() + ' ' + employee.getLastName()}"
-                        th:value="${employee.getId()}">
+                        th:value="${employee.id}">
                 </option>
             </select>
         </div>
+
         <button type="submit">Submit</button>
     </form>
 </body>

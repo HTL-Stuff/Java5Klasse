@@ -6,7 +6,6 @@ import at.noahb.employeetask.persistence.TaskRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,16 +17,24 @@ public record EmployeeController(EmployeeRepository employeeRepository, TaskRepo
     public String getHomePage(Model employeeModel) {
 
         employeeModel.addAttribute("employees", employeeRepository.findAll());
-        employeeModel.addAttribute("newEmployee", new Employee());
+        if (!employeeModel.containsAttribute("newEmployee"))
+            employeeModel.addAttribute("newEmployee", new Employee());
 
         return "overview";
     }
 
     @GetMapping("detailed")
-    public String actionGetDetailed(@RequestParam String id) {
-        System.out.println(employeeRepository.findById(id));
+    public String actionGetDetailed(@RequestParam String id, Model employeeModel) {
+        var optionalEmployee = employeeRepository.findById(id);
 
-        return "detailed-view";
+        if (optionalEmployee.isPresent()) {
+            Employee employee = optionalEmployee.get();
+            employeeModel.addAttribute("employee", employee);
+            employeeModel.addAttribute("tasks", taskRepository.findAllByAssignedEmployee(employee));
+            return "detailed-view";
+        } else {
+            return "redirect:/web/employee/home";
+        }
     }
 
 }

@@ -6,7 +6,23 @@
 </head>
 <body>
     <div>
-        <span th:text="${employee.getFirstName()}"></span>
+        <span th:text="${'All tasks of ' + employee.firstName + ' ' + employee.lastName + ':'}"></span>
+        <div>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>description</th>
+                    <th>finishingTime</th>
+                    <th>hoursWorked</th>
+                </tr>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.id}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.finishingTime}"></td>
+                    <td th:text="${task.hoursWorked}"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 </body>
 </html>
