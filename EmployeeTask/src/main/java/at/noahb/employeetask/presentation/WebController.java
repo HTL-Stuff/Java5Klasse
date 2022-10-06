@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/web/employee/")
-public record EmployeeController(EmployeeRepository employeeRepository, TaskRepository taskRepository) {
+public record WebController(EmployeeRepository employeeRepository, TaskRepository taskRepository) {
 
     @GetMapping("home")
     public String getHomePage(Model employeeModel) {
