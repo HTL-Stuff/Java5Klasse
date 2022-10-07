@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>VMM - Overview</title>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Grades</th>
+    </tr>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.getFullName()}"></td>
+        <td>
+            <a th:text="${student.getGrades().size() + ' grades'}"
+               th:href="@{/web/students/{studentId} (studentId = ${student.getStudentId()})}">
+            </a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

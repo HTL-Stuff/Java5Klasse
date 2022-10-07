@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>VMM - Detailed</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Grade</th>
+        </tr>
+        <tr th:each="grade : ${grades}">
+            <td th:text="${grade.getDate()}"></td>
+            <td th:text="${grade.getSubject()}"></td>
+            <td th:text="${grade.getGrade()}"></td>
+        </tr>
+    </table>
+
+    <div>
+        <h2>New Grade</h2>
+        <form method="post" th:object="${grade}" action="newGrade">
+
+        </form>
+    </div>
+</body>
+</html>
