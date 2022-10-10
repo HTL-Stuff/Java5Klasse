@@ -1,11 +1,11 @@
 package at.noahb.vmm.domain;
 
 import lombok.*;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -21,18 +21,23 @@ public class Grade {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer gradeId;
 
+    @NotNull
+    @PastOrPresent
     private LocalDate date;
 
-    private String subject;
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Subject subject;
 
     @Range(min = 1, max = 5)
+    @NotNull
     private Integer grade;
 
     @ToString.Exclude
     @ManyToOne
     private Student student;
 
-    public Grade(LocalDate date, String subject, Integer grade, Student student) {
+    public Grade(LocalDate date, Subject subject, Integer grade, Student student) {
         this.date = date;
         this.subject = subject;
         this.grade = grade;

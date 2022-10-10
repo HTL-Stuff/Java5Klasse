@@ -2,6 +2,7 @@ package at.noahb.vmm;
 
 import at.noahb.vmm.domain.Grade;
 import at.noahb.vmm.domain.Student;
+import at.noahb.vmm.domain.Subject;
 import at.noahb.vmm.persistence.GradeRepository;
 import at.noahb.vmm.persistence.StudentRepository;
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public record DatabaseInit(StudentRepository studentRepository,
                         return;
                     }
 
-                    Grade grade = new Grade(localDate, gradeContent[2], gradeValue, student);
+                    Grade grade = new Grade(localDate, Subject.valueOf(gradeContent[2]), gradeValue, student);
 
                     gradeRepository.save(grade);
                 });

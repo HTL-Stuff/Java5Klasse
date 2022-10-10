@@ -20,8 +20,25 @@
 
     <div>
         <h2>New Grade</h2>
-        <form method="post" th:object="${grade}" action="newGrade">
-
+        <form method="post" th:action="@{{sid}/newGrade (sid = ${studentId})}" th:object="${newGrade}">
+            <div>
+                <label th:for="subject">Subject:</label>
+                <select th:name="subject">
+                    <option th:each="subject : ${subjects}"  th:text="${subject}"/>
+                </select>
+            </div>
+            <div>
+                <label th:for="grade">Grade:</label>
+                <input type="radio" th:name="grade"
+                       th:each="grade : ${#numbers.sequence(1, 5)}"
+                       th:text="${grade}"
+                       th:value="${grade}"/>
+            </div>
+            <div>
+                <label th:for="date">Date:</label>
+                <input type="date" th:name="date"/>
+            </div>
+            <button type="submit">Submit</button>
         </form>
     </div>
 </body>
