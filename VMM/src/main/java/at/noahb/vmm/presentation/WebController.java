@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -63,6 +62,8 @@ public record WebController(StudentRepository studentRepository, GradeRepository
 
         gradeRepository.save(grade);
 
-        return "redirect:/web/students/home";
+        //auf welche seite erfolgt ein redirect?
+        //return "redirect:/web/students/home";
+        return "redirect:/web/students/" + studentId;
     }
 }
