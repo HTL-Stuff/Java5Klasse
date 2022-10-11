@@ -46,7 +46,9 @@ public record WebController(StudentRepository studentRepository, GradeRepository
     }
 
     @PostMapping("/{id}/newGrade")
-    public String postNewGrade(@PathVariable(name = "id") Integer studentId, @Valid @ModelAttribute("newGrade") Grade grade, BindingResult bindingResult, Model model) {
+    public String postNewGrade(@PathVariable(name = "id") Integer studentId,
+                               @Valid @ModelAttribute("newGrade") Grade grade,
+                               BindingResult bindingResult, Model model) {
 
 
         Optional<Student> student = studentRepository.findById(studentId);
@@ -62,8 +64,6 @@ public record WebController(StudentRepository studentRepository, GradeRepository
 
         gradeRepository.save(grade);
 
-        //auf welche seite erfolgt ein redirect?
-        //return "redirect:/web/students/home";
-        return "redirect:/web/students/" + studentId;
+        return "redirect:/web/students/home";
     }
 }

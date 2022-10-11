@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,5 +43,18 @@ public class Grade {
         this.subject = subject;
         this.grade = grade;
         this.student = student;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Grade grade = (Grade) o;
+        return Objects.equals(gradeId, grade.gradeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gradeId);
     }
 }
