@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Overview</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <th>Last Name</th>
+      <th>First Name</th>
+      <th>Date of Birth</th>
+      <th>Sex</th>
+      <th>Interests</th>
+    </tr>
+    <tr th:each="person : ${persons}">
+      <td th:text="${person.getFirstName()}"></td>
+      <td th:text="${person.getLastName()}"></td>
+      <td th:text="${person.getDateOfBirth()}"></td>
+      <td th:text="${person.getSex()}"></td>
+      <td th:text="${person.getInterestsPretty()}"></td>
+    </tr>
+  </table>
+  <a href="persons/new">New</a>
+</body>
+</html>

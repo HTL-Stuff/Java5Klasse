@@ -1,4 +1,4 @@
-package at.noahb.personinterest.repository;
+package at.noahb.personinterest.persistence;
 
 import at.noahb.personinterest.domain.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;
