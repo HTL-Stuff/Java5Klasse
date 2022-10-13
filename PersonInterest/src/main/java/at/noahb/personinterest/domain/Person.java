@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -35,15 +36,18 @@ public class Person {
 
     @Pattern(regexp = "^[A-Z].*", message = "capital letter")
     @Size(max = 30)
+    @NotBlank(message = "Please enter a first name")
     private String firstName;
 
     @Pattern(regexp = "^[A-Z].*", message = "capital letter")
     @Size(max = 30)
+    @NotBlank(message = "Please enter a last name")
     private String lastName;
     @Enumerated
     private Sex sex;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Date of birth must be in the past or today")
     private LocalDate dateOfBirth;
 
     public Person(Set<Interest> interests, String firstName, String lastName, Sex sex, LocalDate dateOfBirth) {

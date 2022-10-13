@@ -6,24 +6,28 @@
 </head>
 <body>
 <form method="post" action="createNewPerson" th:object="${newPerson}">
+
     <div>
-        <label th:for="*{getLastName()}">Last Name</label>
-        <input type="text" th:field="*{lastName}" th:name="*{getLastName()}">
+        <label for="lastName">Last Name</label>
+        <input type="text" th:field="*{lastName}" th:name="*{getLastName()}" id="lastName">
     </div>
-    <span>Must not be blank</span>
+    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
     <div>
-        <label th:for="*{getFirstName()}">First Name</label>
-        <input type="text" th:field="*{firstName}" th:name="*{getFirstName()}">
+        <label for="firstName">First Name</label>
+        <input type="text" th:field="*{firstName}" th:name="*{getFirstName()}" id="firstName">
     </div>
-    <span>Must not be blank</span>
+    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
     <div>
-        <label th:for="">Date of Birth</label>
+        <label for="dateOfBirth">Date of Birth</label>
         <input type="date" th:field="*{dateOfBirth}"  id="dateOfBirth">
     </div>
-    <span>Must be a date in the past or present</span>
+    <div th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+
     <div>
-        <label th:for="*{sex}">Sex</label>
-        <select th:field="*{sex}" >
+        <label for="sex">Sex</label>
+        <select th:field="*{sex}" id="sex" >
             <option th:each="s : ${sex}" th:value="${s}" th:text="${s}"></option>
         </select>
     </div>
@@ -33,7 +37,7 @@
         <div th:each="i : ${interests}">
             <input type="checkbox" th:field="*{interests}" th:value="${i.getInterestId()}" th:text="${i.getDescription()}">
         </div>
-<!--        <div th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"></div>-->
+        <div th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"></div>
     </fieldset>
 
     <input type="submit">

@@ -30,7 +30,8 @@ public record WebController(PersonRepository personRepository, InterestRepositor
     @GetMapping("new")
     public String getNewPersonForm(Model model) {
 
-        model.addAttribute("newPerson", new Person());
+        if (!model.containsAttribute("newPerson"))
+            model.addAttribute("newPerson", new Person());
         model.addAttribute("interests", interestRepository.findAll());
         model.addAttribute("sex", Sex.values());
 
