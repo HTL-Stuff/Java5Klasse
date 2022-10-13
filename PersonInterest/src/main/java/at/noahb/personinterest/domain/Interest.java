@@ -2,10 +2,7 @@ package at.noahb.personinterest.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
@@ -18,9 +15,11 @@ public class Interest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "interest_id")
+    private Integer interestId;
 
     @Setter
+    @Column(unique = true)
     private String description;
 
     public Interest(String description) {
@@ -32,12 +31,12 @@ public class Interest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Interest interest = (Interest) o;
-        return Objects.equals(id, interest.id);
+        return Objects.equals(interestId, interest.interestId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(interestId);
     }
 
 

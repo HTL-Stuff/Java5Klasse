@@ -17,26 +17,26 @@
     </div>
     <span>Must not be blank</span>
     <div>
-        <label th:for="*{getDateOfBirth()}">Date of birth</label>
-        <input type="date" th:field="*{dateOfBirth}" th:name="*{getDateOfBirth()}">
+        <label th:for="">Date of Birth</label>
+        <input type="date" th:field="*{dateOfBirth}"  id="dateOfBirth">
     </div>
     <span>Must be a date in the past or present</span>
     <div>
-        <label th:for="*{getSex()}">Sex</label>
-        <select th:name="*{getSex()}">
-            <option th:each="s : ${availableSex}" th:field="*{sex}" th:value="${s}" th:text="${s}"></option>
+        <label th:for="*{sex}">Sex</label>
+        <select th:field="*{sex}" >
+            <option th:each="s : ${sex}" th:value="${s}" th:text="${s}"></option>
         </select>
     </div>
 
     <fieldset>
         <legend>Interests</legend>
-        <div th:each="i : ${allInterests}">
-            <input type="checkbox" th:field="*{interests}" th:value="${i.getId()}" th:text="${i.getDescription()}">
+        <div th:each="i : ${interests}">
+            <input type="checkbox" th:field="*{interests}" th:value="${i.getInterestId()}" th:text="${i.getDescription()}">
         </div>
 <!--        <div th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"></div>-->
     </fieldset>
 
-    <button type="submit">Submit</button>
+    <input type="submit">
 </form>
 </body>
 </html>

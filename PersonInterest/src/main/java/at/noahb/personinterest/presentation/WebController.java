@@ -6,7 +6,13 @@ import at.noahb.personinterest.persistence.InterestRepository;
 import at.noahb.personinterest.persistence.PersonRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/web/persons")
@@ -25,16 +31,22 @@ public record WebController(PersonRepository personRepository, InterestRepositor
     public String getNewPersonForm(Model model) {
 
         model.addAttribute("newPerson", new Person());
-        model.addAttribute("allInterests", interestRepository.findAll());
-        model.addAttribute("availableSex", Sex.values());
+        model.addAttribute("interests", interestRepository.findAll());
+        model.addAttribute("sex", Sex.values());
 
         return "newPerson";
     }
 
-     @PostMapping("createNewPerson")
-    public String postNewPerson(@ModelAttribute("newPerson") Person newPerson) {
+    @PostMapping("createNewPerson")
+    public String postNewPerson(@Valid @ModelAttribute("newPerson") Person newPerson, BindingResult bindingResult, Model model) {
 
-         System.out.println(newPerson);
+        System.out.println(newPerson);
+
+        if (bindingResult.hasErrors()) {
+            return getNewPersonForm(model);
+        }
+
+        personRepository.save(newPerson);
 
         return "redirect:/web/persons";
     }
