@@ -8,17 +8,17 @@
 <form method="post" action="createNewPerson" th:object="${newPerson}">
     <div>
         <label th:for="*{getLastName()}">Last Name</label>
-        <input type="text" th:field="*{lastName}" th:name="*{getLastName()}">
+        <input type="text" th:field="*{lastName}">
     </div>
     <span>Must not be blank</span>
     <div>
         <label th:for="*{getFirstName()}">First Name</label>
-        <input type="text" th:field="*{firstName}" th:name="*{getFirstName()}">
+        <input type="text" th:field="*{firstName}">
     </div>
     <span>Must not be blank</span>
     <div>
         <label th:for="*{getDateOfBirth()}">Date of birth</label>
-        <input type="date" th:field="*{dateOfBirth}" th:name="*{getDateOfBirth()}">
+        <input type="date" th:field="*{dateOfBirth}">
     </div>
     <span>Must be a date in the past or present</span>
     <div>
@@ -28,13 +28,13 @@
         </select>
     </div>
 
-    <fieldset>
+  <!--  <fieldset>
         <legend>Interests</legend>
         <div th:each="i : ${allInterests}">
             <input type="checkbox" th:field="*{interests}" th:value="${i.getId()}" th:text="${i.getDescription()}">
         </div>
-<!--        <div th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"></div>-->
-    </fieldset>
+        <div th:if="${#fields.hasErrors('interests')}" th:errors="*{interests}"></div>
+    </fieldset> -->
 
     <button type="submit">Submit</button>
 </form>
