@@ -1,9 +1,16 @@
 package at.noahb.personinterest.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,24 +20,34 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
 
 @Entity
 public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Setter
+    @Column(name = "person_id")
+    private Integer personId;
+
     @ManyToMany(fetch = FetchType.EAGER)
+    @Size(max = 3)
     private Set<Interest> interests = new HashSet<>();
-    @Setter
+
+    @Pattern(regexp = "^[A-Z].*", message = "capital letter")
+    @Size(max = 30)
+    @NotBlank(message = "Please enter a first name")
     private String firstName;
-    @Setter
+
+    @Pattern(regexp = "^[A-Z].*", message = "capital letter")
+    @Size(max = 30)
+    @NotBlank(message = "Please enter a last name")
     private String lastName;
-    @Setter
     @Enumerated
     private Sex sex;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent(message = "Date of birth must be in the past or today")
     private LocalDate dateOfBirth;
 
     public Person(Set<Interest> interests, String firstName, String lastName, Sex sex, LocalDate dateOfBirth) {
@@ -49,7 +66,7 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "id=" + id +
+                "id=" + personId +
                 ", interests=" + interests +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -63,11 +80,11 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(id, person.id);
+        return Objects.equals(personId, person.personId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(personId);
     }
 }
