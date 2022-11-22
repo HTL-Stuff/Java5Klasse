@@ -30,7 +30,8 @@ public class Person {
     @Column(name = "person_id")
     private Integer personId;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    //@ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @Size(max = 3)
     private Set<Interest> interests = new HashSet<>();
 
@@ -67,7 +68,6 @@ public class Person {
     public String toString() {
         return "Person{" +
                 "id=" + personId +
-                ", interests=" + interests +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", sex=" + sex +
