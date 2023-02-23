@@ -1,0 +1,44 @@
+0private int services.classes.FakeGetters.value
+<private java.lang.String services.classes.Strings.property
+8private java.lang.String services.classes.Strings.name
+6private java.lang.Object services.classes.Generics.t
+6private java.lang.Object services.classes.Generics.t
+6private java.lang.Object services.classes.Generics.t
+5public static final int java.lang.Integer.MIN_VALUE
+5public static final int java.lang.Integer.MAX_VALUE
+<public static final java.lang.Class java.lang.Integer.TYPE
+5private static final int java.lang.Class.ANNOTATION
+@private java.lang.Integer[] services.classes.ObjectArrays.ints
+317
+5public static final int java.lang.Integer.MIN_VALUE
+5public static final int java.lang.Integer.MAX_VALUE
+<public static final java.lang.Class java.lang.Integer.TYPE
+5private static final int java.lang.Class.ANNOTATION
+:private java.util.List services.classes.Collections.list
+Iprivate final java.lang.Object java.util.ImmutableCollections$List12.e0
+<private java.lang.String services.classes.Strings.property
+8private java.lang.String services.classes.Strings.name
+<private java.lang.String services.classes.Strings.property
+8private java.lang.String services.classes.Strings.name
+	@private services.classes.Part services.classes.Composite.part1
+	(private int services.classes.Part.size
+	@private services.classes.Part services.classes.Composite.part2
+	(private int services.classes.Part.size
+
+@private java.lang.Integer services.classes.Wrappers.wrappedInt
+
+5public static final int java.lang.Integer.MIN_VALUE
+
+5public static final int java.lang.Integer.MAX_VALUE
+
+<public static final java.lang.Class java.lang.Integer.TYPE
+
+5private static final int java.lang.Class.ANNOTATION
+Lprivate static final java.lang.Integer services.classes.NoFields.theAnswer
+5public static final int java.lang.Integer.MIN_VALUE
+5public static final int java.lang.Integer.MAX_VALUE
+<public static final java.lang.Class java.lang.Integer.TYPE
+5private static final int java.lang.Class.ANNOTATION
+>private final char services.classes.PrimitiveFields.someChar
+>private final long services.classes.PrimitiveFields.someLong
+Dprivate final boolean services.classes.PrimitiveFields.someBoolean
