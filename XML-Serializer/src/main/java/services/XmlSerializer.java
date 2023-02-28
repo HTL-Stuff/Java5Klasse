@@ -2,7 +2,7 @@ package services;
 
 
 import lombok.SneakyThrows;
-import services.domain.PrimitiveFields;
+import services.domain.Wrappers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +33,7 @@ public class XmlSerializer {
     @SneakyThrows
     public String serialize(Object object) {
         if (object == null) {
-            throw new IllegalArgumentException("Object is null");
+            return "";
         }
 
         StringBuilder serialized = new StringBuilder();
@@ -42,7 +42,7 @@ public class XmlSerializer {
         if (!DEFAULT_WRAPPERS.contains(clazz)) {
             serialized.append(convertToXmlTag(clazz.getSimpleName()));
         }
-        
+
         for (Field field : object.getClass().getDeclaredFields()) {
             if (Modifier.isStatic(field.getModifiers()))
                 continue;
@@ -226,9 +226,7 @@ public class XmlSerializer {
     }
 
     public static void main(String[] args) {
-        XmlSerializer serializer = new XmlSerializer();
-
-        var serialized = serializer.serialize(new PrimitiveFields('#', 42, true));
-        System.out.println(serialized);
+        Wrappers wrappers = new Wrappers(10, true);
+        System.out.println(wrappers.getClass().isPrimitive());
     }
 }
