@@ -2,7 +2,6 @@ package services;
 
 
 import lombok.SneakyThrows;
-import services.domain.Wrappers;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -47,7 +46,6 @@ public class XmlSerializer {
             if (Modifier.isStatic(field.getModifiers()))
                 continue;
             StringBuilder serializedField = new StringBuilder();
-            System.out.println(field);
 
             Object value = getFieldValue(field, object);
 
@@ -58,9 +56,10 @@ public class XmlSerializer {
             switch (value) {
                 case Object[] array when field.getType().isArray() ->
                         serializedField.append(serializeArray(field.getName(), array));
-                case Map<?,?> map -> serializedField.append(serializeMap(field.getName(), map));
-                case Collection<?> collection -> serializedField.append(serializeCollection(collection));
-                case Object obj when DEFAULT_WRAPPERS.contains(field.getType()) || field.getType().isPrimitive() ->
+                case Map<?, ?> map -> serializedField.append(serializeMap(field.getName(), map));
+                case Collection<?> collection ->
+                        serializedField.append(serializeArray(field.getName(), collection.toArray()));
+                case Object obj when DEFAULT_WRAPPERS.contains(value.getClass()) || value.getClass().isPrimitive() ->
                         serializedField.append(serializePrimitive(field.getName(), obj));
                 case Object obj -> serializedField.append(serializeObject(field.getName(), obj));
             }
@@ -87,7 +86,7 @@ public class XmlSerializer {
         return serialized.toString();
     }
 
-    private String serializeMap(String name, Map<?,?> map) {
+    private String serializeMap(String name, Map<?, ?> map) {
         StringBuilder serializedField = new StringBuilder(convertToXmlTag(name));
 
         for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -100,7 +99,7 @@ public class XmlSerializer {
 
     private String convertKeyToXmlTag(Object key) {
         return convertToXmlTag("key") +
-                serialize(key) +
+                key +
                 convertToXmlTag("key", true);
     }
 
@@ -119,7 +118,9 @@ public class XmlSerializer {
 
 
         for (Object arrayElement : array) {
-            serializedArray.append(serialize(arrayElement));
+            serializedArray.append(convertToXmlTag("value"));
+            serializedArray.append(arrayElement);
+            serializedArray.append(convertToXmlTag("value", true));
         }
 
         return serializedArray.append(convertToXmlTag(name, true)).toString();
@@ -128,9 +129,6 @@ public class XmlSerializer {
     private String serializePrimitive(String name, Object value) {
         StringBuilder serializedField = new StringBuilder(convertToXmlTag(name));
 
-        System.out.println("primitive: " + name);
-
-        System.out.println(value);
         if (value == null) return "";
         serializedField.append((value instanceof String) ? encode(value.toString()) : value);
 
@@ -178,7 +176,6 @@ public class XmlSerializer {
         }
 
         return invokeMethod(getter, object);
-
     }
 
     private Object invokeMethod(Method getter, Object object) {
