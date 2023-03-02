@@ -20,6 +20,12 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs.add('--enable-preview')
+}
+
+
 test {
+    jvmArgs(['--enable-preview'])
     useJUnitPlatform()
 }

@@ -49,17 +49,20 @@ public class XmlSerializer {
             StringBuilder serializedField = new StringBuilder();
             System.out.println(field);
 
-            if (field.getType().isPrimitive() || DEFAULT_WRAPPERS.contains(field.getType())) {
-                System.out.println("it contains me");
-                serializedField.append(serializePrimitive(field, object));
-            } else if (field.getType().isArray()) {
-                serializedField.append(serializeArray(field, object));
-            } else if (Map.class.isAssignableFrom(field.getType())) {
-                serializedField.append(serializeMap(field, object));
-            } else if (Collection.class.isAssignableFrom(field.getType())) {
-                serializedField.append(serializeCollection(field, object));
-            } else {
-                serializedField.append(serializeObject(field, object));
+            Object value = getFieldValue(field, object);
+
+            if (value == null) {
+                continue;
+            }
+
+            switch (value) {
+                case Object[] array when field.getType().isArray() ->
+                        serializedField.append(serializeArray(field.getName(), array));
+                case Map<?,?> map -> serializedField.append(serializeMap(field.getName(), map));
+                case Collection<?> collection -> serializedField.append(serializeCollection(collection));
+                case Object obj when DEFAULT_WRAPPERS.contains(field.getType()) || field.getType().isPrimitive() ->
+                        serializedField.append(serializePrimitive(field.getName(), obj));
+                case Object obj -> serializedField.append(serializeObject(field.getName(), obj));
             }
 
             serialized.append(serializedField);
@@ -73,11 +76,9 @@ public class XmlSerializer {
         return serialized.toString();
     }
 
-    private String serializeCollection(Field field, Object object) {
-        StringBuilder serialized = new StringBuilder();
-        Collection<?> collection = (Collection<?>) getFieldValue(field, object);
 
-        if (collection == null) return "";
+    private String serializeCollection(Collection<?> collection) {
+        StringBuilder serialized = new StringBuilder();
 
         for (Object item : collection) {
             serialized.append(serialize(item));
@@ -86,18 +87,15 @@ public class XmlSerializer {
         return serialized.toString();
     }
 
-    private String serializeMap(Field field, Object object) {
-        StringBuilder serializedField = new StringBuilder(convertToXmlTag(field.getName()));
-
-        Map<?, ?> map = (Map<?, ?>) getFieldValue(field, object);
-        if (map == null) return "";
+    private String serializeMap(String name, Map<?,?> map) {
+        StringBuilder serializedField = new StringBuilder(convertToXmlTag(name));
 
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             serializedField.append(convertKeyToXmlTag(entry.getKey()));
             serializedField.append(convertValueToXmlTag(entry.getValue()));
         }
 
-        return serializedField.append(convertToXmlTag(field.getName(), true)).toString();
+        return serializedField.append(convertToXmlTag(name, true)).toString();
     }
 
     private String convertKeyToXmlTag(Object key) {
@@ -112,40 +110,31 @@ public class XmlSerializer {
                 convertToXmlTag("value", true);
     }
 
-    private String serializeObject(Field field, Object object) {
-        StringBuilder serializedField = new StringBuilder(convertToXmlTag(field.getName()));
-
-        Object fieldValue = getFieldValue(field, object);
-        if (fieldValue == null) return "";
-        serializedField.append(serialize(fieldValue));
-
-        return serializedField.append(convertToXmlTag(field.getName(), true)).toString();
+    private String serializeObject(String name, Object fieldValue) {
+        return convertToXmlTag(name) + serialize(fieldValue) + convertToXmlTag(name, true);
     }
 
-    private String serializeArray(Field field, Object object) {
-        StringBuilder serializedArray = new StringBuilder(convertToXmlTag(field.getName()));
-        Object[] array = (Object[]) getFieldValue(field, object);
+    private String serializeArray(String name, Object[] array) {
+        StringBuilder serializedArray = new StringBuilder(convertToXmlTag(name));
 
-        if (array == null) return "";
 
         for (Object arrayElement : array) {
             serializedArray.append(serialize(arrayElement));
         }
 
-        return serializedArray.append(convertToXmlTag(field.getName(), true)).toString();
+        return serializedArray.append(convertToXmlTag(name, true)).toString();
     }
 
-    private String serializePrimitive(Field field, Object object) {
-        StringBuilder serializedField = new StringBuilder(convertToXmlTag(field.getName()));
+    private String serializePrimitive(String name, Object value) {
+        StringBuilder serializedField = new StringBuilder(convertToXmlTag(name));
 
-        System.out.println("primitive: " + field.getName());
-        Object value = getFieldValue(field, object);
+        System.out.println("primitive: " + name);
 
         System.out.println(value);
         if (value == null) return "";
         serializedField.append((value instanceof String) ? encode(value.toString()) : value);
 
-        return serializedField.append(convertToXmlTag(field.getName(), true)).toString();
+        return serializedField.append(convertToXmlTag(name, true)).toString();
     }
 
     private String convertToXmlTag(String toConvert) {
@@ -226,7 +215,7 @@ public class XmlSerializer {
     }
 
     public static void main(String[] args) {
-        Wrappers wrappers = new Wrappers(10, true);
-        System.out.println(wrappers.getClass().isPrimitive());
+        Integer wrappers = 1;
+        System.out.println(new XmlSerializer().serialize(wrappers));
     }
 }
