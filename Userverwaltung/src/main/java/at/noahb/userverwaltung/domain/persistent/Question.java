@@ -35,7 +35,7 @@ public class Question {
     @PastOrPresent
     private LocalDate expiryDate;
 
-    private boolean answered;
+    private User answeredBy;
 
     @Override
     public boolean equals(Object o) {
