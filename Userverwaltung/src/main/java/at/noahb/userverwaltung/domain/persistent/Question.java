@@ -1,5 +1,6 @@
 package at.noahb.userverwaltung.domain.persistent;
 
+import at.noahb.userverwaltung.domain.Answer;
 import at.noahb.userverwaltung.domain.AnswerType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 
@@ -29,13 +31,11 @@ public class Question {
     @NotNull
     private String question;
 
-    @Enumerated(EnumType.STRING)
-    private AnswerType answerType;
-
     @PastOrPresent
     private LocalDate expiryDate;
 
-    private User answeredBy;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Answer> answers;
 
     @Override
     public boolean equals(Object o) {
