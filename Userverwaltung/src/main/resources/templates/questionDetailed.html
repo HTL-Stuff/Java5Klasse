@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Question</title>
+</head>
+<body>
+
+<h1 th:text="${question.getName()}"></h1>
+<form th:object="${question}" method="post" th:action="@{/question/{id}/update (id=${question.getId()})}">
+    <p th:text="${question.getQuestion()}"></p>
+    <p th:text="${question.getExpiryDate()}"></p>
+    <div th:each="answerType : ${answerTypes}">
+        <label for="questionAnswer"></label>
+        <input type="radio" id="questionAnswer" name="questionAnswer" th:text="${answerType.name()}">
+    </div>
+    <input type="submit" value="Update">
+</form>
+
+<a href="/questions">Back to overview</a>
+</body>
+</html>

@@ -1,6 +1,6 @@
-package at.noahb.userverwaltung.domain;
+package at.noahb.userverwaltung.domain.persistent;
 
-import at.noahb.userverwaltung.domain.persistent.User;
+import at.noahb.userverwaltung.domain.AnswerType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

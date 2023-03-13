@@ -1,11 +1,10 @@
 package at.noahb.userverwaltung.domain.persistent;
 
-import at.noahb.userverwaltung.domain.Answer;
-import at.noahb.userverwaltung.domain.AnswerType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
@@ -17,6 +16,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class Question {
 
     @Id

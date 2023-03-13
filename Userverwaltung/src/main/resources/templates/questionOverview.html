@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Question Overview</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Expiry Date</th>
+        </tr>
+        <tr th:each="question : ${questions}">
+            <td th:text="${question.getName()}"></td>
+            <td th:text="${question.getExpiryDate()}"></td>
+            <td><a th:href="@{/questions/{id}(id=${question.getId()})}"></a></td>
+        </tr>
+    </table>
+</body>
+</html>
