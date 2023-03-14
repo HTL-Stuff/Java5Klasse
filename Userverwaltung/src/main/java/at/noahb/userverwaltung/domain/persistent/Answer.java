@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Objects;
 
 @Entity
+@Table(name = "answers")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Answer {

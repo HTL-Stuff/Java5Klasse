@@ -9,9 +9,13 @@ import at.noahb.userverwaltung.domain.security.RoleAuthority;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
 import at.noahb.userverwaltung.persistence.RoleRepository;
 import at.noahb.userverwaltung.persistence.UserRepository;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -19,14 +23,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+//@Component
 public record DatabaseInit(QuestionRepository questionRepository,
                            UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           BCryptPasswordEncoder passwordEncoder) implements ApplicationRunner {
-    @Override
+                           RoleRepository roleRepository) implements ApplicationRunner {
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public void run(ApplicationArguments args) throws Exception {
-        var userRole = new Role(1L, RoleAuthority.ROLE_USER);
         var adminRole = new Role(0L, RoleAuthority.ROLE_ADMIN);
+        var userRole = new Role(1L, RoleAuthority.ROLE_USER);
+
         roleRepository.saveAll(List.of(userRole, adminRole));
 
         var admin = new User("admin@comp.com", adminRole, passwordEncoder.encode("admin"));

@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-
+@Table(name = "questions")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,6 +35,9 @@ public class Question {
     private LocalDate expiryDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "question_answers",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "answer_id"))
     private Set<Answer> answers;
 
     @Override
