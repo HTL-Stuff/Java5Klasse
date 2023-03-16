@@ -31,8 +31,20 @@ public class Question {
     @NotNull
     private String question;
 
-    @PastOrPresent
     private LocalDate expiryDate;
+
+    public Question(String name, String question, LocalDate expiryDate) {
+        this.name = name;
+        this.question = question;
+        this.expiryDate = expiryDate;
+    }
+
+    public Question(String name, String question, LocalDate expiryDate, Set<Answer> answers) {
+        this.name = name;
+        this.question = question;
+        this.expiryDate = expiryDate;
+        this.answers = answers;
+    }
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "question_answers",

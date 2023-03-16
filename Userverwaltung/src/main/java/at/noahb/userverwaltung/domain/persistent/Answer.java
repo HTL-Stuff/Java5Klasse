@@ -10,10 +10,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "answers")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Answer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,6 +22,13 @@ public class Answer {
     @Enumerated(EnumType.STRING)
     private AnswerType answerType;
 
+    public Answer() {
+    }
+
+    public Answer(User answerer, AnswerType answerType) {
+        this.answerer = answerer;
+        this.answerType = answerType;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

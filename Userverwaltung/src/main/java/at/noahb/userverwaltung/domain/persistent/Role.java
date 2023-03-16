@@ -12,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "roles")
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class Role {
 
@@ -23,6 +22,13 @@ public class Role {
     @NotNull
     @Enumerated(EnumType.STRING)
     private RoleAuthority roleAuthority;
+
+    public Role(RoleAuthority roleAuthority) {
+        this.roleAuthority = roleAuthority;
+    }
+
+    public Role() {
+    }
 
     @Override
     public boolean equals(Object o) {
