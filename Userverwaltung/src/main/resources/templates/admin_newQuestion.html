@@ -5,9 +5,16 @@
     <title>Add new Question</title>
 </head>
 <body>
+    <div style="display: inline-block">
+        <div style="display: inline-block">Logged in as</div>
+        <div th:text="${user.username}" style="display: inline-block"></div>
+        <div style="display: inline-block"> | </div>
+        <a href="/logout" style="display: inline-block">Logout</a>
+    </div>
+
     <h1>Add Question</h1>
 
-    <form method="post" th:action="/questions/new" th:object="${newQuestion}">
+    <form method="post" th:action="@{/questions/new}" th:object="${newQuestion}">
         <label for="questionTitle">Title:</label>
         <input type="text" id="questionTitle" name="questionTitle" th:field="*{name}"/>
         <br/>
@@ -20,6 +27,7 @@
         <input type="submit" value="Submit"/>
     </form>
 
-    <a th:href="@{}"></a>
+    <a th:href="@{/questions/overview}">See All Questions</a>
+
 </body>
 </html>

@@ -1,7 +1,7 @@
 package at.noahb.userverwaltung.config;
 
-import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.AnswerType;
+import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.persistent.Question;
 import at.noahb.userverwaltung.domain.persistent.Role;
 import at.noahb.userverwaltung.domain.persistent.User;
@@ -10,18 +10,14 @@ import at.noahb.userverwaltung.persistence.AnswerRepository;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
 import at.noahb.userverwaltung.persistence.RoleRepository;
 import at.noahb.userverwaltung.persistence.UserRepository;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 @Component

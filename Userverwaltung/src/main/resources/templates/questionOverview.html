@@ -13,7 +13,7 @@
         <tr th:each="question : ${questions}">
             <td th:text="${question.getName()}"></td>
             <td th:text="${question.getExpiryDate()}"></td>
-            <td><a th:href="@{/questions/{id}(id=${question.getId()})}"></a></td>
+            <td><a th:href="@{/questions/{id}(id=${question.getId()})}">Details</a></td>
         </tr>
     </table>
 </body>
