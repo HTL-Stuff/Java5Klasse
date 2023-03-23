@@ -5,7 +5,9 @@ import at.noahb.userverwaltung.domain.persistent.Question;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +27,10 @@ public class WebController {
 
     @GetMapping("/")
     public String index(Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
 
         if (userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN)) {
@@ -39,6 +45,11 @@ public class WebController {
     @GetMapping("/questions")
     public String questions(Model model, Authentication authentication) {
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
+
+        if (userdetails.getAuthorities().contains(RoleAuthority.ROLE_USER)) {
+            return "redirect:/";
+        }
+
         model.addAttribute("newQuestion", new Question());
         model.addAttribute("user", userdetails);
 
@@ -46,9 +57,14 @@ public class WebController {
     }
 
     @GetMapping("/questions/overview")
-    public String getQuestionOverview(Model model) {
+    public String getQuestionOverview(Model model, Authentication authentication) {
+        UserDetails userdetails = (UserDetails) authentication.getPrincipal();
+        String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
         model.addAttribute("questions", questionRepository.findAll());
+        model.addAttribute("role", role);
+        model.addAttribute("user", userdetails);
+
         return "questionOverview";
     }
 
@@ -59,8 +75,10 @@ public class WebController {
     }
 
     @GetMapping("/questions/{id}")
-    public String getQuestion(@PathVariable Long id, Model model) {
+    public String getQuestion(@PathVariable Long id, Model model, Authentication authentication) {
+        UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         Optional<Question> possibleQuestion = questionRepository.findById(id);
+
 
         if (possibleQuestion.isEmpty()) {
             return "redirect:/questions";
@@ -68,6 +86,7 @@ public class WebController {
 
         model.addAttribute("question", possibleQuestion.get());
         model.addAttribute("answerTypes", AnswerType.values());
+        model.addAttribute("user", userdetails);
 
         return "questionDetailed";
     }

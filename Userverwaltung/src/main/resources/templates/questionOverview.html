@@ -5,16 +5,30 @@
     <title>Question Overview</title>
 </head>
 <body>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Expiry Date</th>
-        </tr>
-        <tr th:each="question : ${questions}">
-            <td th:text="${question.getName()}"></td>
-            <td th:text="${question.getExpiryDate()}"></td>
-            <td><a th:href="@{/questions/{id}(id=${question.getId()})}">Details</a></td>
-        </tr>
-    </table>
+<div style="display: inline-block">
+    <div style="display: inline-block">Logged in as</div>
+    <div th:text="${user.username}" style="display: inline-block"></div>
+    <div style="display: inline-block"> |</div>
+    <a href="/logout" style="display: inline-block">Logout</a>
+</div>
+
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Expiry Date</th>
+    </tr>
+    <tr th:each="question : ${questions}">
+        <td th:text="${question.getName()}"></td>
+        <td th:text="${question.getExpiryDate()}"></td>
+        <td><a th:href="@{/questions/{id}(id=${question.getId()})}">Details</a></td>
+    </tr>
+</table>
+<a id="new" href="/questions" hidden="hidden">new</a>
 </body>
+<script th:inline="javascript">
+    const role = /*[[${role}]]*/ 'ROLE_USER';
+    if (role === 'ROLE_ADMIN') {
+        document.getElementById("new").removeAttribute("hidden");
+    }
+</script>
 </html>

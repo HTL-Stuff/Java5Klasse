@@ -5,15 +5,22 @@
     <title>Question</title>
 </head>
 <body>
+<div style="display: inline-block">
+    <div style="display: inline-block">Logged in as</div>
+    <div th:text="${user.username}" style="display: inline-block"></div>
+    <div style="display: inline-block"> |</div>
+    <a href="/logout" style="display: inline-block">Logout</a>
+</div>
 
 <h1 th:text="${question.getName()}"></h1>
 <form th:object="${question}" method="post" th:action="@{/question/{id}/update (id=${question.getId()})}">
     <p th:text="${question.getQuestion()}"></p>
     <p th:text="${question.getExpiryDate()}"></p>
-    <div th:each="answerType : ${answerTypes}">
+    <div id="giveAnswer" th:each="answerType : ${answerTypes}">
         <label for="questionAnswer"></label>
         <input type="radio" id="questionAnswer" name="questionAnswer" th:text="${answerType.name()}">
     </div>
+
     <input type="submit" value="Update">
 </form>
 

@@ -5,29 +5,29 @@
     <title>Add new Question</title>
 </head>
 <body>
-    <div style="display: inline-block">
-        <div style="display: inline-block">Logged in as</div>
-        <div th:text="${user.username}" style="display: inline-block"></div>
-        <div style="display: inline-block"> | </div>
-        <a href="/logout" style="display: inline-block">Logout</a>
-    </div>
+<div style="display: inline-block">
+    <div style="display: inline-block">Logged in as</div>
+    <div th:text="${user.username}" style="display: inline-block"></div>
+    <div style="display: inline-block"> |</div>
+    <a href="/logout" style="display: inline-block">Logout</a>
+</div>
 
-    <h1>Add Question</h1>
+<h1>Add Question</h1>
 
-    <form method="post" th:action="@{/questions/new}" th:object="${newQuestion}">
-        <label for="questionTitle">Title:</label>
-        <input type="text" id="questionTitle" name="questionTitle" th:field="*{name}"/>
-        <br/>
-        <label for="questionText">Question:</label>
-        <input type="text" id="questionText" name="questionText" th:field="*{question}">
-        <br>
-        <label for="questionExpiry">Expiry date:<</label>
-        <input type="date" id="questionExpiry" name="questionExpiry" th:field="*{expiryDate}">
+<form method="post" th:action="@{/questions/new}" th:object="${newQuestion}">
+    <label for="questionTitle">Title:</label>
+    <input type="text" id="questionTitle" name="questionTitle" th:field="*{name}"/>
+    <br/>
+    <label for="questionText">Question:</label>
+    <input type="text" id="questionText" name="questionText" th:field="*{question}">
+    <br>
+    <label for="questionExpiry">Expiry date:</label>
+    <input type="date" id="questionExpiry" name="questionExpiry" th:field="*{expiryDate}">
 
-        <input type="submit" value="Submit"/>
-    </form>
+    <input type="submit" value="Submit"/>
+</form>
 
-    <a th:href="@{/questions/overview}">See All Questions</a>
+<a th:href="@{/questions/overview}">See All Questions</a>
 
 </body>
 </html>
