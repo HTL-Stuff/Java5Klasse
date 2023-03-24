@@ -13,17 +13,32 @@
 </div>
 
 <h1 th:text="${question.getName()}"></h1>
-<form th:object="${question}" method="post" th:action="@{/question/{id}/update (id=${question.getId()})}">
-    <p th:text="${question.getQuestion()}"></p>
-    <p th:text="${question.getExpiryDate()}"></p>
-    <div id="giveAnswer" th:each="answerType : ${answerTypes}">
+<p th:text="${question.getQuestion()}"></p>
+<p th:text="${question.getExpiryDate()}"></p>
+<form id="giveAnswer" th:object="${question}" method="post" th:action="@{/question/{id}/update (id=${question.getId()})}">
+    <div th:each="answerType : ${answerTypes}">
         <label for="questionAnswer"></label>
         <input type="radio" id="questionAnswer" name="questionAnswer" th:text="${answerType.name()}">
     </div>
-
-    <input type="submit" value="Update">
+    <input type="submit" value="Submit Answer">
 </form>
 
+<div id="answers">
+    Answers:
+</div>
+<br>
 <a href="/questions">Back to overview</a>
 </body>
+<script th:inline="javascript">
+    const role = /*[[${role}]]*/ 'ROLE_USER';
+    if (role === 'ROLE_ADMIN') {
+        document.getElementById("giveAnswer").setAttribute("hidden", "hidden");
+        document.getElementById("answers").removeAttribute("hidden");
+    }
+
+    if (role === 'ROLE_USER') {
+        document.getElementById("answers").setAttribute("hidden","hidden");
+        document.getElementById("giveAnswer").removeAttribute("hidden");
+    }
+</script>
 </html>

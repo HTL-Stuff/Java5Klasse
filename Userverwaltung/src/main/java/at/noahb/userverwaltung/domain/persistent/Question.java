@@ -52,6 +52,10 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "answer_id"))
     private Set<Answer> answers;
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

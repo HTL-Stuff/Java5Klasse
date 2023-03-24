@@ -1,8 +1,10 @@
 package at.noahb.userverwaltung.presentation;
 
 import at.noahb.userverwaltung.domain.AnswerType;
+import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.persistent.Question;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
+import at.noahb.userverwaltung.persistence.AnswerRepository;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class WebController {
 
     private QuestionRepository questionRepository;
+    private AnswerRepository answerRepository;
 
     @GetMapping("/")
     public String index(Authentication authentication) {
@@ -76,18 +79,40 @@ public class WebController {
 
     @GetMapping("/questions/{id}")
     public String getQuestion(@PathVariable Long id, Model model, Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         Optional<Question> possibleQuestion = questionRepository.findById(id);
-
+        String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
         if (possibleQuestion.isEmpty()) {
             return "redirect:/questions";
         }
 
+
+        model.addAttribute("answer", answerRepository.findByAnswerer(userdetails.getUsername()).orElse(new Answer()));
         model.addAttribute("question", possibleQuestion.get());
         model.addAttribute("answerTypes", AnswerType.values());
         model.addAttribute("user", userdetails);
+        model.addAttribute("role", role);
 
         return "questionDetailed";
+    }
+
+    @PostMapping("/questions/{id}/update")
+    public String postUpdateQuestion(@PathVariable Long id, @ModelAttribute Question question, BindingResult bindingResult) {
+        Optional<Question> possibleQuestion = questionRepository.findById(id);
+
+        if (possibleQuestion.isEmpty()) {
+            return "redirect:/questions";
+        }
+
+        Question questionToUpdate = possibleQuestion.get();
+
+        questionRepository.save(questionToUpdate);
+
+        return "redirect:/questions/" + id;
     }
 }
