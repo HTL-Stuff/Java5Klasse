@@ -33,6 +33,12 @@ public class Question {
 
     private LocalDate expiryDate;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "question_answers",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "answer_id"))
+    private Set<Answer> answers;
+
     public Question(String name, String question, LocalDate expiryDate) {
         this.name = name;
         this.question = question;
@@ -45,12 +51,6 @@ public class Question {
         this.expiryDate = expiryDate;
         this.answers = answers;
     }
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "question_answers",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "answer_id"))
-    private Set<Answer> answers;
 
     public void addAnswer(Answer answer) {
         answers.add(answer);

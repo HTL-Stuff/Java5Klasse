@@ -15,12 +15,13 @@
 <h1 th:text="${question.getName()}"></h1>
 <p th:text="${question.getQuestion()}"></p>
 <p th:text="${question.getExpiryDate()}"></p>
-<form id="giveAnswer" th:object="${question}" method="post" th:action="@{/question/{id}/update (id=${question.getId()})}">
+<form id="giveAnswer" th:object="${answer}" method="post" th:action="@{/questions/{id}/update (id=${question.getId()})}">
     <div th:each="answerType : ${answerTypes}">
-        <label for="questionAnswer"></label>
-        <input type="radio" id="questionAnswer" name="questionAnswer" th:text="${answerType.name()}">
+        <label th:for="'questionAnswer_' + ${answerType.name()}"></label>
+        <input type="radio" th:id="'questionAnswer_' + ${answerType.name()}" name="answerType" th:text="${answerType.name()}"
+               th:value="${answerType.name()}" th:field="*{answerType}">
     </div>
-    <input type="submit" value="Submit Answer">
+    <input id="submit" type="submit" value="Submit Answer">
 </form>
 
 <div id="answers">
@@ -39,6 +40,18 @@
     if (role === 'ROLE_USER') {
         document.getElementById("answers").setAttribute("hidden","hidden");
         document.getElementById("giveAnswer").removeAttribute("hidden");
+    }
+
+    const answer = [[${answer}]];
+
+    console.log(answer)
+
+    if (answer !== null) {
+        document.getElementById("questionAnswer_" + answer.answerType).setAttribute("checked", "checked");
+        document.getElementsByName("questionAnswer").forEach(function (element) {
+            element.setAttribute("disabled", "disabled");
+        });
+        document.getElementById("submit").setAttribute("disabled", "disabled");
     }
 </script>
 </html>

@@ -3,13 +3,13 @@ package at.noahb.userverwaltung.presentation;
 import at.noahb.userverwaltung.domain.AnswerType;
 import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.persistent.Question;
+import at.noahb.userverwaltung.domain.persistent.User;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
 import at.noahb.userverwaltung.persistence.AnswerRepository;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
+import at.noahb.userverwaltung.persistence.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +27,8 @@ public class WebController {
 
     private QuestionRepository questionRepository;
     private AnswerRepository answerRepository;
+
+    private UserRepository userRepository;
 
     @GetMapping("/")
     public String index(Authentication authentication) {
@@ -91,8 +93,15 @@ public class WebController {
             return "redirect:/questions";
         }
 
+        Answer answer = answerRepository.findByAnswererEmailAndId(userdetails.getUsername(), id).orElse(new Answer());
 
-        model.addAttribute("answer", answerRepository.findByAnswerer(userdetails.getUsername()).orElse(new Answer()));
+        Answer answer1 = new Answer();
+        answer1.setAnswerType(answer.getAnswerType());
+
+        System.out.println(answer.getAnswerType());
+        System.out.println(answer1.getAnswerType());
+
+        model.addAttribute("answer", answer1);
         model.addAttribute("question", possibleQuestion.get());
         model.addAttribute("answerTypes", AnswerType.values());
         model.addAttribute("user", userdetails);
@@ -102,14 +111,33 @@ public class WebController {
     }
 
     @PostMapping("/questions/{id}/update")
-    public String postUpdateQuestion(@PathVariable Long id, @ModelAttribute Question question, BindingResult bindingResult) {
+    public String postUpdateQuestion(@PathVariable Long id, @ModelAttribute Answer answer, BindingResult bindingResult, Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Optional<Question> possibleQuestion = questionRepository.findById(id);
 
         if (possibleQuestion.isEmpty()) {
+            System.out.println("empty");
             return "redirect:/questions";
         }
 
+        if (userDetails == null) {
+            throw new IllegalStateException("UserDetails not found in model! (This should never happen!");
+        }
+
+        var possibleUser = userRepository.findByEmail(userDetails.getUsername());
+
+        if (possibleUser.isEmpty()) {
+            throw new IllegalStateException("User not found in database! (This should never happen!");
+        }
+
         Question questionToUpdate = possibleQuestion.get();
+        answer.setAnswerer(possibleUser.get());
+        answer = answerRepository.save(answer);
+        questionToUpdate.addAnswer(answer);
 
         questionRepository.save(questionToUpdate);
 

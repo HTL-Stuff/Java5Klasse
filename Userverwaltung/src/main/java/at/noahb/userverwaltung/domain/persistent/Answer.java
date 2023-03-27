@@ -2,14 +2,16 @@ package at.noahb.userverwaltung.domain.persistent;
 
 import at.noahb.userverwaltung.domain.AnswerType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import java.util.Objects;
 
 @Entity
 @Table(name = "answers")
 @AllArgsConstructor
+@Getter
+@ToString
 public class Answer {
 
     @Id
@@ -17,9 +19,11 @@ public class Answer {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Setter
     private User answerer;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private AnswerType answerType;
 
     public Answer() {

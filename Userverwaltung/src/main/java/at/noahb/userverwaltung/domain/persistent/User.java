@@ -1,13 +1,11 @@
 package at.noahb.userverwaltung.domain.persistent;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -26,6 +24,7 @@ public class User {
     private Role role;
 
     @NotNull
+    @ToString.Exclude
     private String password;
 
     @Override
@@ -40,4 +39,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(email);
     }
+
 }
