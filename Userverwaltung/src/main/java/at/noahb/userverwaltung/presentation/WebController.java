@@ -3,7 +3,6 @@ package at.noahb.userverwaltung.presentation;
 import at.noahb.userverwaltung.domain.AnswerType;
 import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.persistent.Question;
-import at.noahb.userverwaltung.domain.persistent.User;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
 import at.noahb.userverwaltung.persistence.AnswerRepository;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
@@ -76,6 +75,12 @@ public class WebController {
     @PostMapping("/questions/new")
     public String postNewQuestion(@ModelAttribute Question newQuestion, BindingResult bindingResult) {
 
+        System.out.println(newQuestion);
+
+        if (bindingResult.hasErrors()) {
+            return "redirect:/questions";
+        }
+
         return "redirect:/questions";
     }
 
@@ -87,22 +92,28 @@ public class WebController {
 
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         Optional<Question> possibleQuestion = questionRepository.findById(id);
+        System.out.println(possibleQuestion);
         String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
         if (possibleQuestion.isEmpty()) {
             return "redirect:/questions";
         }
 
-        Answer answer = answerRepository.findByAnswererEmailAndId(userdetails.getUsername(), id).orElse(new Answer());
+        Question question = possibleQuestion.get();
 
-        Answer answer1 = new Answer();
-        answer1.setAnswerType(answer.getAnswerType());
+        Answer answer = question.getAnswers().stream()
+                .filter(a -> a.getAnswerer().getEmail().equals(userdetails.getUsername()))
+                .findFirst()
+                .orElse(new Answer());
+
+        Answer modelAnswer = new Answer();
+        modelAnswer.setAnswerType(answer.getAnswerType());
 
         System.out.println(answer.getAnswerType());
-        System.out.println(answer1.getAnswerType());
+        System.out.println(modelAnswer.getAnswerType());
 
-        model.addAttribute("answer", answer1);
-        model.addAttribute("question", possibleQuestion.get());
+        model.addAttribute("answer", modelAnswer);
+        model.addAttribute("question", question);
         model.addAttribute("answerTypes", AnswerType.values());
         model.addAttribute("user", userdetails);
         model.addAttribute("role", role);
@@ -139,8 +150,9 @@ public class WebController {
         answer = answerRepository.save(answer);
         questionToUpdate.addAnswer(answer);
 
-        questionRepository.save(questionToUpdate);
+        questionToUpdate = questionRepository.save(questionToUpdate);
 
+        System.out.println(questionToUpdate);
         return "redirect:/questions/" + id;
     }
 }

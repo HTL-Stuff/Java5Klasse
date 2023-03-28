@@ -19,21 +19,16 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Question {
+public class LegacyQuestion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Length(max = 20, message = "Name must be less than 20 characters long")
-    @NotNull(message = "Name must not be null")
     private String name;
 
-    @Length(max = 200, message = "Question must be less than 200 characters long")
-    @NotNull(message = "Question must not be null")
     private String question;
 
-    @FutureOrPresent(message = "Expiry date must be in the future or present")
     private LocalDate expiryDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -42,13 +37,13 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "answer_id"))
     private Set<Answer> answers;
 
-    public Question(String name, String question, LocalDate expiryDate) {
+    public LegacyQuestion(String name, String question, LocalDate expiryDate) {
         this.name = name;
         this.question = question;
         this.expiryDate = expiryDate;
     }
 
-    public Question(String name, String question, LocalDate expiryDate, Set<Answer> answers) {
+    public LegacyQuestion(String name, String question, LocalDate expiryDate, Set<Answer> answers) {
         this.name = name;
         this.question = question;
         this.expiryDate = expiryDate;
@@ -66,7 +61,7 @@ public class Question {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
+        LegacyQuestion question = (LegacyQuestion) o;
         return Objects.equals(id, question.id);
     }
 
@@ -74,4 +69,5 @@ public class Question {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

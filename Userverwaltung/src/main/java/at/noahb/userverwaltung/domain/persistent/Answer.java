@@ -2,8 +2,10 @@ package at.noahb.userverwaltung.domain.persistent;
 
 import at.noahb.userverwaltung.domain.AnswerType;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.Fetch;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -33,6 +35,7 @@ public class Answer {
         this.answerer = answerer;
         this.answerType = answerType;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

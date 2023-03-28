@@ -1,33 +1,30 @@
 package at.noahb.userverwaltung.config;
 
 import at.noahb.userverwaltung.domain.AnswerType;
-import at.noahb.userverwaltung.domain.persistent.Answer;
-import at.noahb.userverwaltung.domain.persistent.Question;
-import at.noahb.userverwaltung.domain.persistent.Role;
-import at.noahb.userverwaltung.domain.persistent.User;
+import at.noahb.userverwaltung.domain.persistent.*;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
-import at.noahb.userverwaltung.persistence.AnswerRepository;
-import at.noahb.userverwaltung.persistence.QuestionRepository;
-import at.noahb.userverwaltung.persistence.RoleRepository;
-import at.noahb.userverwaltung.persistence.UserRepository;
+import at.noahb.userverwaltung.persistence.*;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Set;
 
 @Component
-public record DatabaseInit(QuestionRepository questionRepository,
+public record DatabaseInit(LegacyQuestionRepository questionRepository,
                            UserRepository userRepository,
                            AnswerRepository answerRepository,
                            RoleRepository roleRepository) implements ApplicationRunner {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Validated
     public void run(ApplicationArguments args) throws Exception {
+
         var adminRole = roleRepository.save(new Role(RoleAuthority.ROLE_ADMIN));
         var userRole = roleRepository.save(new Role(RoleAuthority.ROLE_USER));
 
@@ -40,19 +37,19 @@ public record DatabaseInit(QuestionRepository questionRepository,
         var answer2 = answerRepository.save(new Answer(user2, AnswerType.AGREE));
         var answer3 = answerRepository.save(new Answer(user1, AnswerType.DISAGREE));
 
-        var question1 = questionRepository.save(new Question("Hungry?",
+        var question1 = questionRepository.save(new LegacyQuestion("Hungry?",
                 "Are you hungry?", LocalDate.now().minus(1, ChronoUnit.DAYS),
                 Set.of(answer1, answer2)));
-        var question2 = questionRepository.save(new Question("School is boring",
+        var question2 = questionRepository.save(new LegacyQuestion("School is boring",
                 "Idk i just think school is boring. I could use my time efficiently and play computer games instead...",
                 LocalDate.now().plus(1, ChronoUnit.MONTHS), Set.of(answer3)));
-        var question3 = questionRepository.save(new Question("Is Star Wars good?",
+        var question3 = questionRepository.save(new LegacyQuestion("Is Star Wars good?",
                 "Hey my friends are always asking me if I already watched Star Wars. Is it really that good?",
                 LocalDate.now().plus(1, ChronoUnit.MONTHS)));
-        var question4 = questionRepository.save(new Question("Penguins are cute",
+        var question4 = questionRepository.save(new LegacyQuestion("Penguins are cute",
                 "Today I was in the local zoo and I loved the penguins they have. I even took a picture of them!",
                 LocalDate.now().plus(1, ChronoUnit.MONTHS)));
-        var question5 = questionRepository.save(new Question("School is boring",
+        var question5 = questionRepository.save(new LegacyQuestion("School is boring",
                 "Idk i just think school is boring. I could use my time efficiently and play computer games instead...",
                 LocalDate.now().plus(1, ChronoUnit.MONTHS)));
     }
