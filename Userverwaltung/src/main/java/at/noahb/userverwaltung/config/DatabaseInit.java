@@ -1,15 +1,20 @@
 package at.noahb.userverwaltung.config;
 
 import at.noahb.userverwaltung.domain.AnswerType;
-import at.noahb.userverwaltung.domain.persistent.*;
+import at.noahb.userverwaltung.domain.persistent.Answer;
+import at.noahb.userverwaltung.domain.persistent.LegacyQuestion;
+import at.noahb.userverwaltung.domain.persistent.Role;
+import at.noahb.userverwaltung.domain.persistent.User;
 import at.noahb.userverwaltung.domain.security.RoleAuthority;
-import at.noahb.userverwaltung.persistence.*;
+import at.noahb.userverwaltung.persistence.AnswerRepository;
+import at.noahb.userverwaltung.persistence.LegacyQuestionRepository;
+import at.noahb.userverwaltung.persistence.RoleRepository;
+import at.noahb.userverwaltung.persistence.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +27,7 @@ public record DatabaseInit(LegacyQuestionRepository questionRepository,
                            RoleRepository roleRepository) implements ApplicationRunner {
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Validated
+    @Override
     public void run(ApplicationArguments args) throws Exception {
 
         var adminRole = roleRepository.save(new Role(RoleAuthority.ROLE_ADMIN));

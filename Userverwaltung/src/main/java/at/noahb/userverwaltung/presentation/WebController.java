@@ -1,5 +1,6 @@
 package at.noahb.userverwaltung.presentation;
 
+import at.noahb.userverwaltung.domain.AnswerDistribution;
 import at.noahb.userverwaltung.domain.AnswerType;
 import at.noahb.userverwaltung.domain.persistent.Answer;
 import at.noahb.userverwaltung.domain.persistent.Question;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @AllArgsConstructor
@@ -65,7 +66,23 @@ public class WebController {
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
-        model.addAttribute("questions", questionRepository.findAll());
+        if ("ROLE_ADMIN".equals(role)) {
+            model.addAttribute("questions", questionRepository.findAll());
+            List<AnswerDistribution> answerDistribution = answerRepository.getAnswerDistribution();
+
+            if (answerDistribution == null) {
+                answerDistribution = Collections.emptyList();
+            }
+
+            Collections.sort(answerDistribution);
+
+            System.out.println(answerDistribution);
+            model.addAttribute("distribution", answerDistribution);
+        } else {
+            model.addAttribute("distribution", Collections.emptyList());
+            model.addAttribute("questions", questionRepository.findAllByExpiryDateNotExpired());
+        }
+        model.addAttribute("answerTypes", AnswerType.values());
         model.addAttribute("role", role);
         model.addAttribute("user", userdetails);
 
@@ -74,8 +91,6 @@ public class WebController {
 
     @PostMapping("/questions/new")
     public String postNewQuestion(@ModelAttribute Question newQuestion, BindingResult bindingResult) {
-
-        System.out.println(newQuestion);
 
         if (bindingResult.hasErrors()) {
             return "redirect:/questions";
@@ -92,7 +107,6 @@ public class WebController {
 
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         Optional<Question> possibleQuestion = questionRepository.findById(id);
-        System.out.println(possibleQuestion);
         String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
         if (possibleQuestion.isEmpty()) {
@@ -108,9 +122,6 @@ public class WebController {
 
         Answer modelAnswer = new Answer();
         modelAnswer.setAnswerType(answer.getAnswerType());
-
-        System.out.println(answer.getAnswerType());
-        System.out.println(modelAnswer.getAnswerType());
 
         model.addAttribute("answer", modelAnswer);
         model.addAttribute("question", question);
@@ -131,7 +142,6 @@ public class WebController {
         Optional<Question> possibleQuestion = questionRepository.findById(id);
 
         if (possibleQuestion.isEmpty()) {
-            System.out.println("empty");
             return "redirect:/questions";
         }
 
@@ -152,7 +162,6 @@ public class WebController {
 
         questionToUpdate = questionRepository.save(questionToUpdate);
 
-        System.out.println(questionToUpdate);
         return "redirect:/questions/" + id;
     }
 }
