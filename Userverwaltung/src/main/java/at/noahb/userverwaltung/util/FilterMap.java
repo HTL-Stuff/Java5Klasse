@@ -18,8 +18,6 @@ public class FilterMap {
         filteredDistribution.add(new AnswerDistribution(questionId, AnswerType.DISAGREE, 0));
         filteredDistribution.add(new AnswerDistribution(questionId, AnswerType.TOTALLY_AGREE, 0));
 
-        System.out.println(filteredDistribution);
-
         return filteredDistribution;
     }
 }

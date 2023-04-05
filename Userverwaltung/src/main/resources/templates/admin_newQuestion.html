@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Add new Question</title>
 </head>
-<body>
+<body sec:authorize="hasRole('ROLE_ADMIN')">
 <div style="display: inline-block">
     <div style="display: inline-block">Logged in as</div>
     <div th:text="${user.username}" style="display: inline-block"></div>
@@ -16,20 +16,20 @@
 
 <form method="post" th:action="@{/questions/new}" th:object="${newQuestion}">
     <div>
-        <label for="questionTitle">Title:</label>
-        <input type="text" id="questionTitle" name="questionTitle" th:field="*{name}"/>
+        <label for="name">Title:</label>
+        <input type="text" id="name" th:name="*{getName()}" th:field="*{name}"/>
     </div>
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
     <br/>
     <div>
         <label for="questionText">Question:</label>
-        <input type="text" id="questionText" name="questionText" th:field="*{question}">
+        <input type="text" id="questionText" th:name="*{getQuestion()}" th:field="*{question}">
     </div>
     <div th:if="${#fields.hasErrors('question')}" th:errors="*{question}"></div>
     <br>
     <div>
         <label for="questionExpiry">Expiry date:</label>
-        <input type="date" id="questionExpiry" name="questionExpiry" th:field="*{expiryDate}">
+        <input type="date" id="questionExpiry" th:name="*{getExpiryDate()}" th:field="*{expiryDate}">
     </div>
     <div th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}"></div>
     <input type="submit" value="Submit"/>

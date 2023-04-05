@@ -16,7 +16,7 @@
     <tr>
         <th>Title</th>
         <th>Expiry Date</th>
-        <th th:each="type : ${answerTypes}" th:text="${type.name()}"></th>
+        <th th:name="typeHeader" hidden="hidden" th:each="type : ${answerTypes}" th:text="${type.name()}"></th>
     </tr>
     <tr th:each="question : ${questions}">
         <td th:text="${question.getName()}"></td>
@@ -37,6 +37,9 @@
     if (role === 'ROLE_ADMIN') {
         document.getElementById("new").removeAttribute("hidden");
         document.getElementsByName("distribution").forEach(function (element) {
+            element.removeAttribute("hidden");
+        });
+        document.getElementsByName("typeHeader").forEach(function (element) {
             element.removeAttribute("hidden");
         });
     }

@@ -1,12 +1,10 @@
 package at.noahb.userverwaltung.domain.persistent;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
@@ -27,13 +25,16 @@ public class Question {
 
     @Length(max = 20, message = "Name must be less than 20 characters long")
     @NotNull(message = "Name must not be null")
+    @Setter
     private String name;
 
     @Length(max = 200, message = "Question must be less than 200 characters long")
     @NotNull(message = "Question must not be null")
+    @Setter
     private String question;
 
     @FutureOrPresent(message = "Expiry date must be in the future or present")
+    @Setter
     private LocalDate expiryDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -74,4 +75,5 @@ public class Question {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

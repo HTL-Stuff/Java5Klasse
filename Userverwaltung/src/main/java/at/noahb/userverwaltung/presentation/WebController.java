@@ -8,9 +8,13 @@ import at.noahb.userverwaltung.domain.security.RoleAuthority;
 import at.noahb.userverwaltung.persistence.AnswerRepository;
 import at.noahb.userverwaltung.persistence.QuestionRepository;
 import at.noahb.userverwaltung.persistence.UserRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +36,7 @@ public class WebController {
 
     @GetMapping("/")
     public String index(Authentication authentication) {
-        if (authentication == null) {
+        if (checkAuthentication(authentication)) {
             return "redirect:/login";
         }
 
@@ -51,11 +55,13 @@ public class WebController {
     public String questions(Model model, Authentication authentication) {
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
 
-        if (userdetails.getAuthorities().contains(RoleAuthority.ROLE_USER)) {
+        if (!userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN)) {
             return "redirect:/";
         }
 
-        model.addAttribute("newQuestion", new Question());
+        if (!model.containsAttribute("newQuestion")) {
+            model.addAttribute("newQuestion", new Question());
+        }
         model.addAttribute("user", userdetails);
 
         return "admin_newQuestion";
@@ -63,6 +69,10 @@ public class WebController {
 
     @GetMapping("/questions/overview")
     public String getQuestionOverview(Model model, Authentication authentication) {
+        if (checkAuthentication(authentication)) {
+            return "redirect:/login";
+        }
+
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
         String role = userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN) ? "ROLE_ADMIN" : "ROLE_USER";
 
@@ -76,11 +86,10 @@ public class WebController {
 
             Collections.sort(answerDistribution);
 
-            System.out.println(answerDistribution);
             model.addAttribute("distribution", answerDistribution);
         } else {
             model.addAttribute("distribution", Collections.emptyList());
-            model.addAttribute("questions", questionRepository.findAllByExpiryDateNotExpired());
+            model.addAttribute("questions", questionRepository.findAllByExpiryDateNotExpiredAndAnswersNotContains(userdetails.getUsername()));
         }
         model.addAttribute("answerTypes", AnswerType.values());
         model.addAttribute("role", role);
@@ -90,18 +99,24 @@ public class WebController {
     }
 
     @PostMapping("/questions/new")
-    public String postNewQuestion(@ModelAttribute Question newQuestion, BindingResult bindingResult) {
+    public String postNewQuestion(@Valid @ModelAttribute("newQuestion") Question newQuestion, BindingResult bindingResult, Model model, Authentication authentication) {
+        if (checkAuthentication(authentication)) {
+            return "redirect:/login";
+        }
 
         if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().forEach(System.out::println);
             return "redirect:/questions";
         }
 
-        return "redirect:/questions";
+        newQuestion = questionRepository.save(newQuestion);
+
+        return "redirect:/questions/" + newQuestion.getId();
     }
 
     @GetMapping("/questions/{id}")
     public String getQuestion(@PathVariable Long id, Model model, Authentication authentication) {
-        if (authentication == null) {
+        if (checkAuthentication(authentication)) {
             return "redirect:/login";
         }
 
@@ -120,6 +135,7 @@ public class WebController {
                 .findFirst()
                 .orElse(new Answer());
 
+        System.out.println(answer);
         Answer modelAnswer = new Answer();
         modelAnswer.setAnswerType(answer.getAnswerType());
 
@@ -134,7 +150,7 @@ public class WebController {
 
     @PostMapping("/questions/{id}/update")
     public String postUpdateQuestion(@PathVariable Long id, @ModelAttribute Answer answer, BindingResult bindingResult, Authentication authentication) {
-        if (authentication == null) {
+        if (checkAuthentication(authentication)) {
             return "redirect:/login";
         }
 
@@ -144,24 +160,24 @@ public class WebController {
         if (possibleQuestion.isEmpty()) {
             return "redirect:/questions";
         }
-
         if (userDetails == null) {
             throw new IllegalStateException("UserDetails not found in model! (This should never happen!");
         }
 
-        var possibleUser = userRepository.findByEmail(userDetails.getUsername());
-
-        if (possibleUser.isEmpty()) {
-            throw new IllegalStateException("User not found in database! (This should never happen!");
-        }
+        var user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found in database! (This should never happen!)"));
 
         Question questionToUpdate = possibleQuestion.get();
-        answer.setAnswerer(possibleUser.get());
+        answer.setAnswerer(user);
         answer = answerRepository.save(answer);
         questionToUpdate.addAnswer(answer);
 
-        questionToUpdate = questionRepository.save(questionToUpdate);
+        questionRepository.save(questionToUpdate);
 
-        return "redirect:/questions/" + id;
+        return "redirect:/questions/overview";
+    }
+
+    private boolean checkAuthentication(Authentication authentication) {
+        return authentication == null || !authentication.isAuthenticated();
     }
 }
