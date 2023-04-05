@@ -12,20 +12,17 @@
     <a href="/logout" style="display: inline-block">Logout</a>
 </div>
 
-<table th:if="${questions.size()} > 0">
+<table th:if="${questions.size()} > 0" style="table-layout: fixed; width: 50%; border-collapse: collapse">
     <tr>
         <th>Title</th>
         <th>Expiry Date</th>
         <th sec:authorize="hasRole('ROLE_ADMIN')" th:each="type : ${answerTypes}" th:name="typeHeader"
             th:text="${type.name()}"></th>
     </tr>
-    <tr th:each="question : ${questions}">
-        <td th:text="${question.getName()}"></td>
+    <tr th:each="question : ${questions}" th:with="temp=${T(at.noahb.userverwaltung.util.FilterMap).filter(distribution.stream(), question.getId())}" style="text-align: center">
+        <td th:text="${question.getName()}" style="text-align: left"></td>
         <td th:text="${question.getExpiryDate()}"></td>
-        <td sec:authorize="hasRole('ROLE_ADMIN')" th:name="distribution"
-            th:with="temp=${T(at.noahb.userverwaltung.util.FilterMap).filter(distribution.stream(), question.getId())}">
-            <div style="display: inline-block" th:each="answerDistribution : ${temp}"
-                 th:text="${answerDistribution.getCount()}"></div>
+        <td sec:authorize="hasRole('ROLE_ADMIN')" th:name="distribution" th:each="answerDistribution : ${temp}" th:text="${answerDistribution.getCount()}">
         </td>
         <td><a th:href="@{/questions/{id}(id=${question.getId()})}">Details</a></td>
     </tr>
