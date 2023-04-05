@@ -10,6 +10,13 @@ import java.util.stream.Stream;
 
 public class FilterMap {
 
+    /**
+     * Filters the given stream by the given questionId and adds the missing answer types.
+     * This method is called by the HTML template.
+     * @param stream the stream to filter
+     * @param questionId the questionId to filter by
+     * @return
+     */
     public static Set<AnswerDistribution> filter(Stream<AnswerDistribution> stream, Long questionId) {
         TreeSet<AnswerDistribution> filteredDistribution = stream.filter(answerDistribution -> answerDistribution.getQuestionId().equals(questionId))
                 .collect(Collectors.toCollection(TreeSet::new));

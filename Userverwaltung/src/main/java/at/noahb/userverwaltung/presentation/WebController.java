@@ -31,7 +31,6 @@ public class WebController {
 
     private QuestionRepository questionRepository;
     private AnswerRepository answerRepository;
-
     private UserRepository userRepository;
 
     @GetMapping("/")
@@ -101,7 +100,7 @@ public class WebController {
         }
 
         if (bindingResult.hasErrors()) {
-            return "redirect:/questions";
+            return questions(model, authentication);
         }
 
         newQuestion = questionRepository.save(newQuestion);

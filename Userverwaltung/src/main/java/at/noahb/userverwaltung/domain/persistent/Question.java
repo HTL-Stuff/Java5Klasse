@@ -1,8 +1,8 @@
 package at.noahb.userverwaltung.domain.persistent;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -24,17 +24,18 @@ public class Question {
     private Long id;
 
     @Length(max = 20, message = "Name must be less than 20 characters long")
-    @NotNull(message = "Name must not be null")
+    @NotBlank(message = "Name must not be blank")
     @Setter
     private String name;
 
     @Length(max = 200, message = "Question must be less than 200 characters long")
-    @NotNull(message = "Question must not be null")
+    @NotBlank(message = "Question must not be blank")
     @Setter
     private String question;
 
     @FutureOrPresent(message = "Expiry date must be in the future or present")
     @Setter
+    @NotNull(message = "Expiry date must not be empty")
     private LocalDate expiryDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
