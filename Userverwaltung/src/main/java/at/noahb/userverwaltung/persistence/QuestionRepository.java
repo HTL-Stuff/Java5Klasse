@@ -14,7 +14,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query("""
     select q
     from Question q
-    where q.expiryDate > current_date
+    where q.expiryDate >= current_date
     and ?1 not in (
         select a.answerer.email
         from Answer a

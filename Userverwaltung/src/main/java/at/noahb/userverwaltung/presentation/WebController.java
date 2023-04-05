@@ -55,10 +55,6 @@ public class WebController {
     public String questions(Model model, Authentication authentication) {
         UserDetails userdetails = (UserDetails) authentication.getPrincipal();
 
-        if (!userdetails.getAuthorities().contains(RoleAuthority.ROLE_ADMIN)) {
-            return "redirect:/";
-        }
-
         if (!model.containsAttribute("newQuestion")) {
             model.addAttribute("newQuestion", new Question());
         }
@@ -105,7 +101,6 @@ public class WebController {
         }
 
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(System.out::println);
             return "redirect:/questions";
         }
 

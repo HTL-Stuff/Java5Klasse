@@ -38,4 +38,7 @@
 <a th:href="@{/questions/overview}">See All Questions</a>
 
 </body>
+<body sec:authorize="hasRole('ROLE_USER')">
+    <a th:href="@{/questions/overview}">Question Overview</a>
+</body>
 </html>
