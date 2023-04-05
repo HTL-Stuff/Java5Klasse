@@ -1,7 +1,6 @@
 package at.noahb.userverwaltung.domain;
 
-import at.noahb.userverwaltung.domain.persistent.Answer;
-import at.noahb.userverwaltung.domain.persistent.Question;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -9,16 +8,12 @@ import java.util.Objects;
 
 @Getter
 @ToString
+@AllArgsConstructor
 public class AnswerDistribution implements Comparable<AnswerDistribution> {
 
-    private Long questionId;
     private final AnswerType answerType;
     private final long count;
-
-    public AnswerDistribution(AnswerType answerType, long count) {
-        this.answerType = answerType;
-        this.count = count;
-    }
+    private final Long questionId;
 
     public AnswerDistribution(Long questionId, AnswerType answerType, long count) {
         this.questionId = questionId;

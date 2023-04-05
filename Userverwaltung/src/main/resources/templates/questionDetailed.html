@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Question</title>
@@ -7,7 +7,7 @@
 <body sec:authorize="isAuthenticated()">
 <div style="display: inline-block">
     <div style="display: inline-block">Logged in as</div>
-    <div th:text="${user.username}" style="display: inline-block"></div>
+    <div style="display: inline-block" th:text="${user.username}"></div>
     <div style="display: inline-block"> |</div>
     <a href="/logout" style="display: inline-block">Logout</a>
 </div>
@@ -15,11 +15,14 @@
 <h1 th:text="${question.getName()}"></h1>
 <p th:text="${question.getQuestion()}"></p>
 <p th:text="${question.getExpiryDate()}"></p>
-<form sec:authorize="hasRole('ROLE_USER')" id="giveAnswer" th:object="${answer}" method="post" th:action="@{/questions/{id}/update (id=${question.getId()})}">
+<form id="giveAnswer" method="post" sec:authorize="hasRole('ROLE_USER')"
+      th:action="@{/questions/{id}/update (id=${question.getId()})}"
+      th:object="${answer}">
     <div th:each="answerType : ${answerTypes}">
         <label th:for="'questionAnswer_' + ${answerType.name()}"></label>
-        <input type="radio" th:id="'questionAnswer_' + ${answerType.name()}" name="answerType" th:text="${answerType.name()}"
-               th:value="${answerType.name()}" th:field="*{answerType}">
+        <input name="answerType" th:field="*{answerType}" th:id="'questionAnswer_' + ${answerType.name()}"
+               th:text="${answerType.name()}"
+               th:value="${answerType.name()}" type="radio">
     </div>
     <input id="submit" type="submit" value="Submit Answer">
 </form>

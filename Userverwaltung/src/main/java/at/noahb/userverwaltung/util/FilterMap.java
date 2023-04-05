@@ -13,7 +13,8 @@ public class FilterMap {
     /**
      * Filters the given stream by the given questionId and adds the missing answer types.
      * This method is called by the HTML template.
-     * @param stream the stream to filter
+     *
+     * @param stream     the stream to filter
      * @param questionId the questionId to filter by
      * @return
      */
